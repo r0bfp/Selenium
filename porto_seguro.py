@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+import os
 
 # Classe porto seguro onde toda manipulação vai ocorrer
 class Porto_Seguro:
@@ -34,14 +36,27 @@ class Porto_Seguro:
 
 
 # Credenciais de acesso
-username = raw_input('Insira o usuario de acesso: ')
-password = raw_input('Insira a senha de acesso: ')
+username = input('Insira o usuario de acesso: ')
+password = input('Insira a senha de acesso: ')
 # Data de competencia formato MesAno
-competence = raw_input('Insira a data de competencia MM/AAAA: ')
+competence = input('Insira a data de competencia MM/AAAA: ')
 
+# Configuração do perfil do browser
+firefox_profile = webdriver.FirefoxProfile()
 
-# Abrindo o browser
-browser = webdriver.Firefox()
+# Configuração do browser para realizar o download sem caixa de dialogo
+firefox_profile.set_preference('browser.download.folderList', 2)
+firefox_profile.set_preference('browser.download.manager.showWhenStarting', False)
+# A linha a baixo é responsável por definir o caminho onde o download será realizado
+firefox_profile.set_preference('browser.download.dir', os.getcwd())
+firefox_profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/zip')
+
+# Configuraçoes importantes
+# Localizando o binario do firefox
+binary = FirefoxBinary('C:\\Program Files\\Mozilla Firefox\\firefox.exe')
+# Abrindo o browser passando como argumento o binario do firefox e o executavel do driver
+browser = webdriver.Firefox(firefox_binary=binary, executable_path='C:\\geckodriver.exe', firefox_profile=firefox_profile)
+
 # Instanciando objeto da classe porto seguro
 porto_seguro = Porto_Seguro(browser)
 
